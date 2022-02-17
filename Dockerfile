@@ -1,4 +1,4 @@
-FROM node:17-bullseye
+FROM node:17-bullseye-slim
 
 LABEL org.opencontainers.image.authors="me@kmpm.se"
 LABEL org.opencontainers.image.source=https://github.com/kmpm/haraka365
@@ -10,6 +10,7 @@ RUN npm install -g npm@8.4.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y python2 build-essential
 ENV PYTHON=/usr/bin/python2
 
