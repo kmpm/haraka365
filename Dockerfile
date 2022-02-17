@@ -1,6 +1,7 @@
 FROM node:17-bullseye
 
 LABEL org.opencontainers.image.authors="me@kmpm.se"
+LABEL org.opencontainers.image.source=https://github.com/kmpm/haraka365
 
 
 WORKDIR /app
