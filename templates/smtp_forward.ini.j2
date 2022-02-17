@@ -1,0 +1,21 @@
+enable_outbound=true
+domain_selector=mail_from
+
+host=smtp.office365.com
+port=587
+
+enable_tls=false
+one_message_per_rcpt=false
+
+auth_type=login
+auth_user={{ haraka_out_user }}
+auth_pass={{ haraka_out_pwd }}
+
+[{{ haraka_out_domain }}]
+host=smtp.office365.com
+port=587
+enable_tls=false
+one_message_per_rcpt=false
+auth_type=login
+auth_user={{ haraka_out_user }}
+auth_pass={{ haraka_out_pwd }}
