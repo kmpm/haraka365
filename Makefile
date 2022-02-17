@@ -5,12 +5,16 @@ TAG=$(shell git describe --tags --abbrev=0)
 
 .PHONY: build
 build:
-	docker build -t $(NAME):latest -t $(NAME):$(TAG) -t .
+	docker build -t $(NAME):$(TAG) .
 
+.PHONY: scan
+scan:
+	docker scan $(NAME):$(TAG)
 
+.PHONY: bash
 bash:
 	docker run --rm -it $(NAME) bash
 
+.PHONY: run
 run:
-
 	docker run --rm -v "haraka365:/app/config" $(NAME) 

@@ -1,4 +1,6 @@
-FROM node:16-bullseye
+FROM node:17-bullseye
+
+LABEL org.opencontainers.image.authors="me@kmpm.se"
 
 
 WORKDIR /app
