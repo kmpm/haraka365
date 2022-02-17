@@ -17,6 +17,7 @@ function mkconfig {
     YMLFILE=haraka-docker.yml
     echo haraka_me: $HARAKA_ME > $YMLFILE
     echo haraka_port: $HARAKA_PORT >> $YMLFILE
+    echo haraka_loglevel: $HARAKA_LOGLEVEL >> $YMLFILE
     echo haraka_out_user: $HARAKA_OUT_USER >> $YMLFILE
     echo haraka_out_pwd: $HARAKA_OUT_PWD >> $YMLFILE
     echo haraka_out_domain: $HARAKA_OUT_DOMAIN >> $YMLFILE
@@ -29,6 +30,7 @@ function mkconfig {
     mkjinja $YMLFILE auth_flat_file.ini
     mkjinja $YMLFILE plugins
     mkjinja $YMLFILE tls.ini
+    mkjinja $YMLFILE log.ini
 }
 
 function mkcert {

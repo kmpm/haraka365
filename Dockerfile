@@ -30,6 +30,7 @@ ENV HARAKA_ME=demo.test.com
 ENV HARAKA_IN_USER=inuser@test.com HARAKA_IN_PWD=inpassword
 ENV HARAKA_OUT_USER=someuser@test.com HARAKA_OUT_PWD=supersecret HARAKA_OUT_DOMAIN=test.com
 ENV HARAKA_CERT_SUBJ="/C=SE/ST=SomeState/O=Acme Inc/OU=It Department/CN=demo.test.com"
+ENV HARAKA_LOGLEVEL=info
 
 
 EXPOSE 587
