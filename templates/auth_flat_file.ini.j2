@@ -3,4 +3,6 @@ methods=PLAIN,LOGIN,CRAM-MD5
 
 
 [users]
-{{ haraka_in_user }}={{ haraka_in_pwd }}
+{% for user in auth.users %}
+{{ user.name }}={{ user.pwd }}
+{% endfor %}

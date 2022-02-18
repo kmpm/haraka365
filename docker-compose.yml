@@ -1,7 +1,6 @@
 version: "3.2"
 volumes:
-  mail_config:
-  mail_queue:
+  mail_data:
 
 services:
   mail:
@@ -16,7 +15,6 @@ services:
       HARAKA_CERT_SUBJ: "/C=SE/ST=SomeRegion/O=ACME Inc/OU=It Department/CN=mailserver"
       HARAKA_LOGLEVEL: debug
     volumes:
-      - mail_config:/app/config
-      - mail_queue:/app/queue
+      - mail_data:/app/haraka
     ports:
       - 588:587

@@ -1,0 +1,53 @@
+version: "3.8"
+volumes:
+  haraka_data:
+  mongo_data:
+
+services:
+  haraka:
+    build: .
+    #restart: unless-stopped
+    environment:
+      HARAKA_ME: mailserver
+      HARAKA_IN_USER: inbounduser@somedomain.com
+      HARAKA_IN_PWD: "supersneekypassword"
+      HARAKA_OUT_USER: o365user@somedomain.com
+      HARAKA_OUT_PWD: "realysecret"
+      HARAKA_OUT_DOMAIN: somedomain.com
+      HARAKA_CERT_SUBJ: "/C=SE/ST=SomeRegion/O=ACME Inc/OU=It Department/CN=mailserver"
+      HARAKA_LOGLEVEL: debug
+      HARAKA_MONGO_CONNECTION:  mongodb://root:example@mongo:27017/haraka?authSource=admin
+      HARAKA_MONGO_DB: haraka
+    volumes:
+      - haraka_data:/app/haraka
+      # this will override any HARAKA_ environment variables
+      # - './haraka-docker.yml:/app/haraka-docker.yml'
+    ports:
+      - 588:587
+    depends_on:
+      - "mongo"
+
+  # redis:
+  #   image: redis:6
+
+
+  mongo:
+    restart: unless-stopped
+    image: mongo:5
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    depends_on:
+      - "mongo"
