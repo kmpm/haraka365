@@ -12,10 +12,10 @@ scan:
 	docker scan $(NAME):$(TAG)
 
 
-.PHONY: publish
-publish:
-	docker publish $(NAME):$(TAG)
-	docker publish $(NAME):latest
+.PHONY: push
+push:
+	docker push $(NAME):$(TAG)
+	docker push $(NAME):latest
 
 
 .PHONY: bash
