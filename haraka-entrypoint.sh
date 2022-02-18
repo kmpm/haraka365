@@ -2,49 +2,73 @@
 
 set -e 
 
+APPDIR=/app
+HARAKA_HOME=$APPDIR/haraka
 
-function mkjinja {
-    ymlfile=$1
-    tmpl=$2
-    jinja2 templates/$tmpl.j2 $ymlfile --format=yml > config/$tmpl 
-}
+KEYFILE=$HARAKA_HOME/config/tls_key.pem
+CERTFILE=$HARAKA_HOME/config/tls_cert.pem
+
+if [ ! -d $HARAKA_HOME ]; then
+    mkdir $HARAKA_HOME
+fi
 
 function mkconfig {
-    if [ ! -d config ]; then
+    if [ ! -d $HARAKA_HOME/config ]; then
         mkdir config
-        haraka -i /app
+        haraka -i $HARAKA_HOME
     fi
-    YMLFILE=haraka-docker.yml
-    echo haraka_me: $HARAKA_ME > $YMLFILE
-    echo haraka_port: $HARAKA_PORT >> $YMLFILE
-    echo haraka_loglevel: $HARAKA_LOGLEVEL >> $YMLFILE
-    echo haraka_out_user: $HARAKA_OUT_USER >> $YMLFILE
-    echo haraka_out_pwd: $HARAKA_OUT_PWD >> $YMLFILE
-    echo haraka_out_domain: $HARAKA_OUT_DOMAIN >> $YMLFILE
-    echo haraka_in_user: $HARAKA_IN_USER >> $YMLFILE
-    echo haraka_in_pwd: $HARAKA_IN_PWD >> $YMLFILE
+    YMLFILE=$APPDIR/haraka-docker.yml
+    if [ ! -f $YMLFILE ]; then  
+        echo "config from environment"
+        echo "me: $HARAKA_ME" > $YMLFILE
+        echo "port: $HARAKA_PORT" >> $YMLFILE
+        echo "loglevel: $HARAKA_LOGLEVEL" >> $YMLFILE
+        
+        echo "auth:" >> $YMLFILE
+        echo "  users:" >> $YMLFILE
+        echo "    - name: '$HARAKA_IN_USER'" >> $YMLFILE
+        echo "      pwd: '$HARAKA_IN_PWD'" >> $YMLFILE
 
-    mkjinja $YMLFILE me
-    mkjinja $YMLFILE smtp.ini
-    mkjinja $YMLFILE smtp_forward.ini
-    mkjinja $YMLFILE auth_flat_file.ini
-    mkjinja $YMLFILE plugins
-    mkjinja $YMLFILE tls.ini
-    mkjinja $YMLFILE log.ini
+        echo "smtp_forward:" >> $YMLFILE
+        echo "  user: $HARAKA_OUT_USER" >> $YMLFILE
+        echo "  pwd: '$HARAKA_OUT_PWD'" >> $YMLFILE
+        echo "  domain: $HARAKA_OUT_DOMAIN" >> $YMLFILE
+
+        if [[ ! -z "${HARAKA_MONGO_CONNECTION}" ]]; then
+            echo "mongodb:" >> $YMLFILE
+            echo "  connection: '$HARAKA_MONGO_CONNECTION'" >> $YMLFILE
+            echo "  db: '$HARAKA_MONGO_DB'" >> $YMLFILE
+        fi
+        echo "done creating '$YMLFILE' from environment"
+    fi
+    if [[ ! -z "$HARAKA_SHOW_CONFIG" ]]; then
+        echo "--- $YMLFILE ---"
+        cat $YMLFILE
+        echo "----------------"
+    fi
+    echo "processing templates"
+    for f in $APPDIR/templates/*.j2; do
+        outfile=`basename "${f%.j2}"`
+        outfile="$HARAKA_HOME/config/$outfile"
+        echo "creating '$outfile' from '$f'"
+        jinja2 $f $YMLFILE --format=yml > $outfile
+    done    
 }
 
 function mkcert {
-    if [ ! -f config/tls_cert.pem ]; then
+    if [ ! -f $CERTFILE ]; then
+        echo "creating certificates for tls"
         openssl req -x509 -nodes -days 2190 -newkey rsa:2048 \
             -subj "$HARAKA_CERT_SUBJ" \
-            -keyout config/tls_key.pem -out config/tls_cert.pem
+            -keyout $KEYFILE -out $CERTFILE
     fi
 }
 
 if [ "$1" == "haraka" ]; then
     mkconfig
     mkcert
-    exec haraka -c /app
+    echo "launching haraka"
+    exec haraka -c $HARAKA_HOME
     exit 0
 fi
 

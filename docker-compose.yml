@@ -1,0 +1,20 @@
+version: "3.2"
+volumes:
+  mail_data:
+
+services:
+  mail:
+    image: "kmpm/haraka365"
+    environment:
+      HARAKA_ME: mailserver
+      HARAKA_IN_USER: inbounduser@somedomain.com
+      HARAKA_IN_PWD: "supersneekypassword"
+      HARAKA_OUT_USER: o365user@somedomain.com
+      HARAKA_OUT_PWD: "realysecret"
+      HARAKA_OUT_DOMAIN: somedomain.com
+      HARAKA_CERT_SUBJ: "/C=SE/ST=SomeRegion/O=ACME Inc/OU=It Department/CN=mailserver"
+      HARAKA_LOGLEVEL: debug
+    volumes:
+      - mail_data:/app/haraka
+    ports:
+      - 588:587

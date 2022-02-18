@@ -69,3 +69,6 @@ headers
 queue/smtp_forward
 
 #watch
+{% if mongodb is defined %}
+mongodb
+{% endif %}

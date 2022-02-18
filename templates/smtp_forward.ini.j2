@@ -8,14 +8,14 @@ enable_tls=false
 one_message_per_rcpt=false
 
 auth_type=login
-auth_user={{ haraka_out_user }}
-auth_pass={{ haraka_out_pwd }}
+auth_user={{ smtp_forward.user }}
+auth_pass={{ smtp_forward.pwd }}
 
-[{{ haraka_out_domain }}]
+[{{ smtp_forward.domain }}]
 host=smtp.office365.com
 port=587
 enable_tls=false
 one_message_per_rcpt=false
 auth_type=login
-auth_user={{ haraka_out_user }}
-auth_pass={{ haraka_out_pwd }}
+auth_user={{ smtp_forward.user }}
+auth_pass={{ smtp_forward.pwd }}

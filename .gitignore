@@ -1,1 +1,2 @@
-docker-compose.yml
+haraka-docker.yml
+stack.yml
