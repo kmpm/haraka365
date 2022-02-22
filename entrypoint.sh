@@ -4,6 +4,7 @@ set -e
 
 APPDIR=/app
 HARAKA_HOME=$APPDIR/haraka
+YMLFILE=$APPDIR/data.yml
 
 KEYFILE=$HARAKA_HOME/config/tls_key.pem
 CERTFILE=$HARAKA_HOME/config/tls_cert.pem
@@ -17,7 +18,7 @@ function mkconfig {
         mkdir config
         haraka -i $HARAKA_HOME
     fi
-    YMLFILE=$APPDIR/haraka-docker.yml
+    
     if [ ! -f $YMLFILE ]; then  
         echo "config from environment"
         echo "me: $HARAKA_ME" > $YMLFILE
@@ -32,7 +33,10 @@ function mkconfig {
         echo "smtp_forward:" >> $YMLFILE
         echo "  user: $HARAKA_OUT_USER" >> $YMLFILE
         echo "  pwd: '$HARAKA_OUT_PWD'" >> $YMLFILE
-        echo "  domain: $HARAKA_OUT_DOMAIN" >> $YMLFILE
+        echo "  domains:">> $YMLFILE
+        echo "    - name: $HARAKA_OUT_DOMAIN" >> $YMLFILE
+        echo "      user: $HARAKA_OUT_USER" >> $YMLFILE
+        echo "      pwd: '$HARAKA_OUT_PWD'" >> $YMLFILE
 
         if [[ ! -z "${HARAKA_MONGO_CONNECTION}" ]]; then
             echo "mongodb:" >> $YMLFILE

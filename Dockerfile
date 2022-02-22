@@ -32,8 +32,8 @@ RUN apt-get install -y  curl && \
 
 COPY templates /app/templates
 
-COPY haraka-entrypoint.sh /usr/local/bin
-RUN chmod 0755 /usr/local/bin/haraka-entrypoint.sh
+COPY entrypoint.sh /usr/local/bin
+RUN chmod 0755 /usr/local/bin/entrypoint.sh
 
 # Default environment
 ENV HARAKA_PORT=587
@@ -45,5 +45,5 @@ ENV HARAKA_LOGLEVEL=info
 
 EXPOSE 587
 
-ENTRYPOINT [ "haraka-entrypoint.sh" ]
+ENTRYPOINT [ "entrypoint.sh" ]
 CMD [ "haraka" ]

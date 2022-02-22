@@ -16,5 +16,7 @@ services:
       HARAKA_LOGLEVEL: debug
     volumes:
       - mail_data:/app/haraka
+      # this will override any HARAKA_ environment variables
+      # - './data.yml:/app/data.yml'
     ports:
       - 588:587
