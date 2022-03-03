@@ -15,8 +15,13 @@ services:
       HARAKA_CERT_SUBJ: "/C=SE/ST=SomeRegion/O=ACME Inc/OU=It Department/CN=mailserver"
       HARAKA_LOGLEVEL: debug
     volumes:
-      - mail_data:/app/haraka
       # this will override any HARAKA_ environment variables
+      # but needs a `data.yml` file
       - './data.yml:/app/data.yml'
+      # example for production
+      # - mail_data:/app/haraka
+      # example for development
+      - "./mail_data:/app/haraka/"
+      - "./templates:/app/templates/"
     ports:
       - 588:587
