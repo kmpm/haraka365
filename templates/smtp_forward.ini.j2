@@ -1,3 +1,4 @@
+{% set smtp_forward = smtp_forward|default({}) %}
 enable_outbound=true
 domain_selector=mail_from
 
@@ -8,12 +9,16 @@ enable_tls=false
 one_message_per_rcpt=false
 max_connections={{ smtp_forward.max_connections|default('1000') }}
 
-auth_type=login
-; auth_user={{ smtp_forward.user }}
-; auth_pass={{ smtp_forward.pwd }}
+auth_type={{ smtp_forward.auth_type|default('login') }}
+{%- if smtp_forward.user is defined -%}
+auth_user={{ smtp_forward.user }}
+{% endif %}
+{%- if smtp_forward.pwd is defined -%}
+auth_pass={{ smtp_forward.pwd }}
+{% endif %}
 
 
-{% for entry in smtp_forward.domains %}
+{% for entry in smtp_forward.domains -%}
 [{{ entry.name }}]
 host={{ entry.host|default('smtp.office365.com') }}
 port=587
@@ -23,4 +28,4 @@ auth_type=login
 auth_user={{ entry.user }}
 auth_pass={{ entry.pwd }}
 
-{% endfor %}
+{% endfor -%}
