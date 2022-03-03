@@ -1,3 +1,4 @@
+{% set helo_checks = helo_checks|default({}) -%}
 ; disable checks or reject for each test if you are worried about strictness
 
 ;dns_timeout=30
@@ -28,14 +29,13 @@
 ; forward_dns=false
 ; big_company=true
 
+
+{% set skip = helo_checks.skip|default({}) -%}
 [skip]
-; private_ip=true
-{% if helo_checks is defined and helo_checks.skip is defined and helo_checks.skip.relaying %}
-relaying={{ helo_checks.skip.relaying|default('true') }}
-{% else %}
-; relaying=true
+{% if skip.relaying is defined -%}
+relaying={{ 'true' if skip.relaying is sameas true else 'false' }}
 {% endif %}
-; whitelist=true  ; TODO
+
 
 [bigco]
 msn.com=msn.com
