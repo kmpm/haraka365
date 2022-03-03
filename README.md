@@ -48,8 +48,8 @@ auth:
 
 # accounts to use when forwarding emails.
 smtp_forward:
-  user: order.bengtsfors@rikstvatt.se
-  pwd: '9@Ls7pHfsi'
+  user: o365user@somedomain.com
+  pwd: 'realysecret'
   # a list of domains that will be matched on `mail_from` domain name
   domains: 
     - name: somedomain.com
