@@ -7,6 +7,9 @@
 #
 # To see the help docs for a particular plugin, run 'haraka -h plugin.name'
 
+
+{% set dkim_sign = dkim_sign|default({}) %}
+
 #status
 #process_title
 # Log to syslog (see 'haraka -h syslog')
@@ -60,7 +63,9 @@ headers
 #attachment
 #clamd
 #spamassassin
-#dkim_sign
+{% if dkim_sign.enabled is defined and dkim_sign.enabled is sameas true -%}
+dkim_sign
+{% endif -%}
 #limit
 
 # QUEUE

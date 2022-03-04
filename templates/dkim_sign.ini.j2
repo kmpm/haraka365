@@ -1,0 +1,5 @@
+{% set dkim_sign = dkim_sign|default({}) %}
+disabled = {{ 'false' if dkim_sign.enabled is sameas true else 'true' }}
+selector = mail
+; domain = example.com
+headers_to_sign = From, Sender, Reply-To, Subject, Date, Message-ID, To, Cc, MIME-Version

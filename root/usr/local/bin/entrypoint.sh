@@ -13,6 +13,13 @@ if [ ! -d $HARAKA_HOME ]; then
     mkdir $HARAKA_HOME
 fi
 
+jinj() {
+    tmpfile=$(mktemp /tmp/jinja2-template.XXXXXX)
+    echo "$2" >tmpfile
+    jinja2 --format=yml tmpfile $1
+    rm "$tmpfile"
+}
+
 function mkconfig {
     if [ ! -d $HARAKA_HOME/config ]; then
         mkdir config
@@ -68,9 +75,30 @@ function mkcert {
     fi
 }
 
+function mkdkim {
+    # https://github.com/haraka/Haraka/issues/1548
+    VALUE=$(jinj data.yml "{{ 'true' if dkim_sign is defined and dkim_sign.enabled is sameas true else 'false' }}")
+    if [ "$VALUE" == "true" ]; then
+        VALUE=($(jinj data.yml "{% for x in dkim_sign.domains %}{{ x.name }} {% endfor %}"))
+        for x in "${VALUE[@]}"
+        do
+            if [ ! -d "${HARAKA_HOME}/config/dkim/$x" ]; then
+                echo "creating dkim keys for $x"
+                dkim_key_gen.sh 4096 ${HARAKA_HOME}/config/dkim $x
+                echo "use selector"
+                cat "${HARAKA_HOME}/config/dkim/$x/selector"
+            else
+                echo "dkim keys for $x already exists, use selector"
+                cat "${HARAKA_HOME}/config/dkim/$x/selector"
+            fi
+        done
+    fi
+}
+
 if [ "$1" == "haraka" ]; then
     mkconfig
     mkcert
+    mkdkim
     echo "launching haraka"
     exec haraka -c $HARAKA_HOME
     exit 0
@@ -83,6 +111,11 @@ fi
 
 if [ "$1" == mkcert ]; then
     mkcert
+    exit 0
+fi
+
+if [ "$1" == "mkdkim" ]; then
+    mkdkim
     exit 0
 fi
 

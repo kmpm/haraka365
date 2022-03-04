@@ -32,9 +32,9 @@ RUN mkdir -p ${HARAKA_HOME} && \
 
 
 COPY templates /app/templates
+COPY root /
 
-COPY entrypoint.sh /usr/local/bin
-RUN chmod 0755 /usr/local/bin/entrypoint.sh
+RUN chmod 0755 /usr/local/bin/*.sh
 
 # Default environment
 ENV HARAKA_PORT=587
