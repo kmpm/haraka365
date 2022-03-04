@@ -48,6 +48,7 @@ auth:
 
 # accounts to use when forwarding emails.
 smtp_forward:
+  # optional defaults if domains is not used or empty
   user: o365user@somedomain.com
   pwd: 'realysecret'
   # a list of domains that will be matched on `mail_from` domain name
@@ -59,10 +60,17 @@ smtp_forward:
       user: realuser@someotherdomain.com
       pwd: 'realysecretagain'
 
+# optional config for headers plugin
+# headers:
+#   required: 'From,Date'
+
 # optional mongodb plugin from https://github.com/Helpmonks/haraka-plugin-mongodb
 # mongodb:
 #   connection: 'mongodb://root:example@mongo:27017/?authSource=admin'
 #   db: 'haraka'
+
+
+
 ```
 
 ## Usage
